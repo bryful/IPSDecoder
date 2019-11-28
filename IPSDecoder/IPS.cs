@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 using System.IO;
 
+using Codeplex.Data;
+
 namespace IPSDecoder
 {
+
     public class IPS
     {
         private string m_filepath = "";
@@ -76,10 +79,11 @@ namespace IPSDecoder
 
             int idx = m_start;
 
-            string str = "";
-            str += Path.GetFileName(m_filepath) + "\r\n";
+
+            string cr = "";
             do
             {
+                dynamic data = new DynamicJson();
 
                 try
                 {
@@ -89,44 +93,60 @@ namespace IPSDecoder
                     if (idx >= m_last - 1) break;
                     int ps = (m_data[idx] << 8) | (m_data[idx + 1]);
                     idx += 2;
-                    byte[] rep = new byte[ps];
-                    int fillV = 0;
-                    int fillL = 0;
-                    string vs = "";
+
+                    int fillSize = 0;
+                    int fillValue = 0;
+                    string[] vs = new string[ps];
                     if (ps > 0)
                     {
-                        vs = "";
+                        //if (idx >= m_last - ps) break;
                         for (int i = 0; i < ps; i++)
                         {
-                            rep[i] = m_data[idx];
-                            if (vs != "") vs += ",";
-                            vs += String.Format("0x{0:X2}", m_data[idx]);
+                            vs[i] = String.Format("0x{0:X2}", m_data[idx]);
                             idx++;
+                            if (idx > m_last) break;
                         }
 
-                        str += String.Format("adr:0x{0:X6} / patchSize:{1:X6} / Value:{2}\r\n", adr,ps,vs);
-
+                        data["Adr"] = String.Format("0x{0:X6}", adr);
+                        data["PatchSize"] = String.Format("0x{0:X6}", ps);
+                        data["PatchValues"] = vs;
                     }
                     else
                     {
-                        fillV = m_data[idx];
+                        fillSize = (m_data[idx] << 8) | (m_data[idx + 1]);
+                        idx += 2;
+                        fillValue = m_data[idx];
                         idx++;
-                        fillL = m_data[idx];
-                        idx++;
-                        str += String.Format("adr:0x{0:X6} / fillSize:{1:X6} / fillValue:{2}\r\n", adr, fillV, fillL);
+
+                        data["Adr"] = String.Format("0x{0:X6}", adr);
+                        data["FillSize"] = String.Format("0x{0:X6}", fillSize);
+                        data["FillValue"] = String.Format("0x{0:X6}", fillValue);
                     }
+                    if (cr != "") cr += ",\r\n";
+                    cr += "\t" + data.ToString();
                     ret = true;
                 }
                 catch
                 {
                     ret = false;
-                    str = "";
+                    break;
                 }
-
+                
+                
             } while (idx <= m_last);
 
-            m_ResultStr = str;
-
+            string js = "";
+            js += "{\r\n";
+            js += "\"FileName\":\"" + Path.GetFileName(m_filepath) + "\",\r\n";
+            js += "\"Clusters\":" + "[\r\n";
+            js += cr;
+            js += "\r\n]\r\n";
+            js += "}";
+            if (ret == false)
+            {
+                js = "ERROR !\r\n" + js; 
+            }
+            m_ResultStr = js;
             return ret;
         }
     }

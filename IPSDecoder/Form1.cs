@@ -113,8 +113,8 @@ namespace IPSDecoder
                     IPS ips = new IPS();
                     if(ips.LoadFile(s))
                     {
-                        listBox1.Items.AddRange(ips.ResultStr.Split('\n'));
                     }
+                    textBox1.Text += ips.ResultStr;
                 }
             }
         }
@@ -147,6 +147,15 @@ namespace IPSDecoder
 
             MessageBox.Show(j.ToJson());
 
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            dynamic js = new DynamicJson();
+            js.Name = "aaa.ips";
+            js.Adr = "0x00000";
+            js.PatchSize = "0x0001";
+            textBox1.Text = js.ToString();   
         }
 
 
