@@ -11,6 +11,19 @@ using Codeplex.Data;
 namespace IPSDecoder
 {
 
+    public class Clusters
+    {
+        public int Adr = 0;
+        public int Size = 0;
+        public bool IsPatch = true;
+        public byte[] PatchValues = new byte[0];
+        public byte FillValue = 0;
+        public Clusters()
+        {
+
+        }
+    }
+
     public class IPS
     {
         private string m_filepath = "";
