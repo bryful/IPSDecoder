@@ -113,8 +113,8 @@ namespace IPSDecoder
                     IPS ips = new IPS();
                     if(ips.LoadFile(s))
                     {
+                        textBox1.Text += ips.ToJson();
                     }
-                    textBox1.Text += ips.ResultStr;
                 }
             }
         }
