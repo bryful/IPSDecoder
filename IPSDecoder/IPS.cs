@@ -129,10 +129,61 @@ namespace IPSDecoder
         {
             return ((InAdr(clst.Adr)) || (InAdr(clst.AdrEnd)));
         }
+
+        public bool FromDynamicJson(DynamicJson obj)
+        {
+
+            bool ret = false;
+            try
+            {
+                if (obj.IsDefined("Adr") == true)
+                {
+                    m_Adr = int.Parse(((dynamic)obj)["Adr"]);
+                    if (obj.IsDefined("Patch") == true)
+                    {
+                        if (((dynamic)obj)["Patch"] == true)
+                        {
+                            if ((obj.IsDefined("Size") == true) && (obj.IsDefined("Value") == true))
+                            {
+                                m_PatchSize = int.Parse(((dynamic)obj)["Size"]);
+
+                                DynamicJson ary = ((dynamic)obj)["Value"];
+                                if (ary.IsArray == true)
+                                {
+                                    List<byte> bb = new List<byte>();
+                                    foreach (var s in (dynamic)ary)
+                                    {
+                                        bb.Add(byte.Parse(s));
+                                    }
+                                    PatchValues = bb.ToArray();
+                                    ret = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if ((obj.IsDefined("Size") == true) && (obj.IsDefined("Value") == true))
+                            {
+                                m_FilllSize = int.Parse(((dynamic)obj)["Size"]);
+                                m_FillValue = byte.Parse(((dynamic)obj)["Value"]);
+                                ret = true;
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                ret = false;
+            }
+            return ret;
+
+        }
     }
 
     public class IPS
     {
+        // *******************************************************************************************
         private readonly string wk = "\"";
         private readonly string CRLF = "\r\n";
         // *******************************************************************************************
@@ -142,12 +193,12 @@ namespace IPSDecoder
             get { return m_filepath; }
             set
             {
-                LoadFile(value);
+                InportIPSFile(value);
             }
         }
-
         private List<Clusters> m_clusters = new List<Clusters>();
 
+        // *******************************************************************************************
         public Clusters this[int idx]
         {
             get
@@ -155,6 +206,7 @@ namespace IPSDecoder
                 return m_clusters[idx];
             }
         }
+        // *******************************************************************************************
         public bool IsEnabled
         {
             get { return (m_clusters.Count > 0); }
@@ -244,7 +296,63 @@ namespace IPSDecoder
 
             return ret;
         }
-        public bool LoadFile(string p)
+        // *******************************************************************************************
+        private bool Decode(byte[] d, int st, int ed)
+        {
+            bool ret = false;
+            if (d.Length <= 8) return ret;
+            if ((st < 5) || (ed <= 0)) return ret;
+
+            int idx = st;
+
+            m_clusters.Clear();
+
+            do
+            {
+                dynamic data = new DynamicJson();
+
+                Clusters clst = new Clusters();
+                try
+                {
+                    if (idx >= ed - 2) break;
+                    clst.Adr = (d[idx] << 16) | (d[idx + 1] << 8) | (d[idx + 2]);
+                    idx += 3;
+                    if (idx >= ed - 1) break;
+                    clst.PatchSize = (d[idx] << 8) | (d[idx + 1]);
+                    idx += 2;
+
+                    if (clst.PatchSize > 0)
+                    {
+                        for (int i = 0; i < clst.PatchSize; i++)
+                        {
+                            clst.PatchValues[i] = d[idx];
+                            idx++;
+                            if (idx > ed) break;
+                        }
+                    }
+                    else
+                    {
+                        clst.FilllSize = (d[idx] << 8) | (d[idx + 1]);
+                        idx += 2;
+                        clst.FillValue = d[idx];
+                        idx++;
+                    }
+                    m_clusters.Add(clst);
+                    ret = true;
+                }
+                catch
+                {
+                    ret = false;
+                    m_clusters.Clear();
+                    break;
+                }
+
+
+            } while (idx <= ed);
+            return ret;
+        }
+        // *******************************************************************************************
+        public bool InportIPSFile(string p)
         {
             bool ret = false;
             int st = 0;
@@ -289,59 +397,70 @@ namespace IPSDecoder
             //イベント
             return ret;
         }
-        private bool Decode(byte [] d,int st, int ed)
+        // *******************************************************************************************
+        public bool ExportJson(string p)
         {
             bool ret = false;
-            if (d.Length <= 8) return ret;
-            if ((st < 5) || (ed <= 0)) return ret;
- 
-            int idx = st;
-
-            m_clusters.Clear();
-
-            do
+            StreamWriter sw = new StreamWriter(p,false,Encoding.GetEncoding("utf-8"));
+            try
             {
-                dynamic data = new DynamicJson();
+                sw.Write(ToJson());
+                ret = true;
+            }
+            finally
+            {
+                sw.Close();
+            }
+            if (ret == true)
+            {
+                m_filepath = p;
+            }
+            return ret;
+        }  
+        // *******************************************************************************************
+        public bool ImportJson(string p)
+        {
+            bool ret = false;
 
-                Clusters clst = new Clusters();
-                try
+            StreamReader sr = new StreamReader(p, Encoding.GetEncoding("utf-8"));
+            try
+            {
+                Claer();
+                string s = sr.ReadToEnd();
+
+                DynamicJson d = DynamicJson.Parse(s);
+
+                if(d.IsDefined("Name")==true)
                 {
-                    if (idx >= ed - 2) break;
-                    clst.Adr = (d[idx] << 16) | (d[idx + 1] << 8) | (d[idx + 2]);
-                    idx += 3;
-                    if (idx >= ed - 1) break;
-                    clst.PatchSize = (d[idx] << 8) | (d[idx + 1]);
-                    idx += 2;
-
-                    if (clst.PatchSize > 0)
+                    if (d.IsDefined("Clusters")==true)
                     {
-                        for (int i = 0; i < clst.PatchSize; i++)
+                        DynamicJson obj = ((dynamic)d)["Clusters"];
+                        if (obj.IsArray == true)
                         {
-                            clst.PatchValues[i] = d[idx];
-                            idx++;
-                            if (idx > ed) break;
+                            foreach(dynamic bb in (dynamic)obj)
+                            {
+                                Clusters clts = new Clusters();
+                                clts.FromDynamicJson((DynamicJson)bb);
+                                if (clts.Enabled == true)
+                                {
+                                    m_clusters.Add(clts);
+                                }
+                            }
+                            if(m_clusters.Count>0)
+                            {
+                                ret = true;
+                                m_filepath = p;
+                            }
                         }
                     }
-                    else
-                    {
-                        clst.FilllSize = (d[idx] << 8) | (d[idx + 1]);
-                        idx += 2;
-                        clst.FillValue = d[idx];
-                        idx++;
-                    }
-                    m_clusters.Add(clst);
-                    ret = true;
                 }
-                catch
-                {
-                    ret = false;
-                    m_clusters.Clear();
-                    break;
-                }
-                
-                
-            } while (idx <= ed);
+            }
+            finally
+            {
+                sr.Close();
+            }
             return ret;
         }
+        // *******************************************************************************************
     }
 }

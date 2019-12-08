@@ -38,9 +38,23 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.button1 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tpToJson = new System.Windows.Forms.TabPage();
+            this.btnToJsonClear = new System.Windows.Forms.Button();
+            this.cbToJsonPeview = new System.Windows.Forms.CheckBox();
+            this.btnToJson = new System.Windows.Forms.Button();
+            this.tpJsonPreview = new System.Windows.Forms.TabPage();
+            this.btnPrevewJsonClear = new System.Windows.Forms.Button();
+            this.btnPreviewJson = new System.Windows.Forms.Button();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.cbToJsonExport = new System.Windows.Forms.CheckBox();
+            this.cbToJsonClear = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.tpToJson.SuspendLayout();
+            this.tpJsonPreview.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -51,7 +65,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1093, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(906, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -114,22 +128,11 @@
             // 
             // statusStrip1
             // 
-            this.statusStrip1.Location = new System.Drawing.Point(0, 405);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 442);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1093, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(906, 22);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
-            // 
-            // button1
-            // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(853, 372);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // textBox1
             // 
@@ -137,32 +140,179 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox1.Font = new System.Drawing.Font("ＭＳ ゴシック", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.textBox1.Location = new System.Drawing.Point(12, 36);
+            this.textBox1.Location = new System.Drawing.Point(6, 79);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(1060, 330);
+            this.textBox1.Size = new System.Drawing.Size(886, 285);
             this.textBox1.TabIndex = 4;
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl1.Controls.Add(this.tpToJson);
+            this.tabControl1.Controls.Add(this.tpJsonPreview);
+            this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Location = new System.Drawing.Point(0, 38);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(906, 393);
+            this.tabControl1.TabIndex = 5;
+            // 
+            // tpToJson
+            // 
+            this.tpToJson.Controls.Add(this.cbToJsonClear);
+            this.tpToJson.Controls.Add(this.cbToJsonExport);
+            this.tpToJson.Controls.Add(this.btnToJsonClear);
+            this.tpToJson.Controls.Add(this.cbToJsonPeview);
+            this.tpToJson.Controls.Add(this.btnToJson);
+            this.tpToJson.Controls.Add(this.textBox1);
+            this.tpToJson.Location = new System.Drawing.Point(4, 22);
+            this.tpToJson.Name = "tpToJson";
+            this.tpToJson.Padding = new System.Windows.Forms.Padding(3);
+            this.tpToJson.Size = new System.Drawing.Size(898, 367);
+            this.tpToJson.TabIndex = 0;
+            this.tpToJson.Text = "IpsToJson";
+            this.tpToJson.UseVisualStyleBackColor = true;
+            // 
+            // btnToJsonClear
+            // 
+            this.btnToJsonClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnToJsonClear.Location = new System.Drawing.Point(800, 50);
+            this.btnToJsonClear.Name = "btnToJsonClear";
+            this.btnToJsonClear.Size = new System.Drawing.Size(75, 23);
+            this.btnToJsonClear.TabIndex = 7;
+            this.btnToJsonClear.Text = "Clear";
+            this.btnToJsonClear.UseVisualStyleBackColor = true;
+            this.btnToJsonClear.Click += new System.EventHandler(this.btnToJsonClear_Click);
+            // 
+            // cbToJsonPeview
+            // 
+            this.cbToJsonPeview.AutoSize = true;
+            this.cbToJsonPeview.Checked = true;
+            this.cbToJsonPeview.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbToJsonPeview.Location = new System.Drawing.Point(141, 50);
+            this.cbToJsonPeview.Name = "cbToJsonPeview";
+            this.cbToJsonPeview.Size = new System.Drawing.Size(106, 16);
+            this.cbToJsonPeview.TabIndex = 6;
+            this.cbToJsonPeview.Text = "Json結果を表示";
+            this.cbToJsonPeview.UseVisualStyleBackColor = true;
+            // 
+            // btnToJson
+            // 
+            this.btnToJson.AllowDrop = true;
+            this.btnToJson.Location = new System.Drawing.Point(20, 15);
+            this.btnToJson.Name = "btnToJson";
+            this.btnToJson.Size = new System.Drawing.Size(103, 52);
+            this.btnToJson.TabIndex = 5;
+            this.btnToJson.Text = "ToJson";
+            this.btnToJson.UseVisualStyleBackColor = true;
+            this.btnToJson.DragDrop += new System.Windows.Forms.DragEventHandler(this.btnToJson_DragDrop);
+            this.btnToJson.DragEnter += new System.Windows.Forms.DragEventHandler(this.btnToJson_DragEnter);
+            // 
+            // tpJsonPreview
+            // 
+            this.tpJsonPreview.Controls.Add(this.btnPrevewJsonClear);
+            this.tpJsonPreview.Controls.Add(this.btnPreviewJson);
+            this.tpJsonPreview.Controls.Add(this.textBox2);
+            this.tpJsonPreview.Location = new System.Drawing.Point(4, 22);
+            this.tpJsonPreview.Name = "tpJsonPreview";
+            this.tpJsonPreview.Padding = new System.Windows.Forms.Padding(3);
+            this.tpJsonPreview.Size = new System.Drawing.Size(898, 367);
+            this.tpJsonPreview.TabIndex = 1;
+            this.tpJsonPreview.Text = "JsonPreview";
+            this.tpJsonPreview.UseVisualStyleBackColor = true;
+            // 
+            // btnPrevewJsonClear
+            // 
+            this.btnPrevewJsonClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnPrevewJsonClear.Location = new System.Drawing.Point(800, 50);
+            this.btnPrevewJsonClear.Name = "btnPrevewJsonClear";
+            this.btnPrevewJsonClear.Size = new System.Drawing.Size(75, 23);
+            this.btnPrevewJsonClear.TabIndex = 10;
+            this.btnPrevewJsonClear.Text = "Clear";
+            this.btnPrevewJsonClear.UseVisualStyleBackColor = true;
+            // 
+            // btnPreviewJson
+            // 
+            this.btnPreviewJson.AllowDrop = true;
+            this.btnPreviewJson.Location = new System.Drawing.Point(20, 15);
+            this.btnPreviewJson.Name = "btnPreviewJson";
+            this.btnPreviewJson.Size = new System.Drawing.Size(103, 52);
+            this.btnPreviewJson.TabIndex = 9;
+            this.btnPreviewJson.Text = "PreviewJson";
+            this.btnPreviewJson.UseVisualStyleBackColor = true;
+            // 
+            // textBox2
+            // 
+            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox2.Font = new System.Drawing.Font("ＭＳ ゴシック", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.textBox2.Location = new System.Drawing.Point(6, 79);
+            this.textBox2.Multiline = true;
+            this.textBox2.Name = "textBox2";
+            this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox2.Size = new System.Drawing.Size(886, 285);
+            this.textBox2.TabIndex = 8;
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(898, 367);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "PatchFromJson";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // cbToJsonExport
+            // 
+            this.cbToJsonExport.AutoSize = true;
+            this.cbToJsonExport.Checked = true;
+            this.cbToJsonExport.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbToJsonExport.Location = new System.Drawing.Point(141, 28);
+            this.cbToJsonExport.Name = "cbToJsonExport";
+            this.cbToJsonExport.Size = new System.Drawing.Size(124, 16);
+            this.cbToJsonExport.TabIndex = 8;
+            this.cbToJsonExport.Text = "Json結果を書き出し";
+            this.cbToJsonExport.UseVisualStyleBackColor = true;
+            // 
+            // cbToJsonClear
+            // 
+            this.cbToJsonClear.AutoSize = true;
+            this.cbToJsonClear.Location = new System.Drawing.Point(277, 50);
+            this.cbToJsonClear.Name = "cbToJsonClear";
+            this.cbToJsonClear.Size = new System.Drawing.Size(150, 16);
+            this.cbToJsonClear.TabIndex = 9;
+            this.cbToJsonClear.Text = "実行ごとに表示をクリアする";
+            this.cbToJsonClear.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1093, 427);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.button1);
+            this.ClientSize = new System.Drawing.Size(906, 464);
+            this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "IPSDecoder";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.Form1_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.Form1_DragEnter);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.tabControl1.ResumeLayout(false);
+            this.tpToJson.ResumeLayout(false);
+            this.tpToJson.PerformLayout();
+            this.tpJsonPreview.ResumeLayout(false);
+            this.tpJsonPreview.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -180,8 +330,19 @@
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tpToJson;
+        private System.Windows.Forms.TabPage tpJsonPreview;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.Button btnToJson;
+        private System.Windows.Forms.CheckBox cbToJsonPeview;
+        private System.Windows.Forms.Button btnToJsonClear;
+        private System.Windows.Forms.Button btnPrevewJsonClear;
+        private System.Windows.Forms.Button btnPreviewJson;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.CheckBox cbToJsonExport;
+        private System.Windows.Forms.CheckBox cbToJsonClear;
     }
 }
 

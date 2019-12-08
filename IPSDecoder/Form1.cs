@@ -26,6 +26,8 @@ namespace IPSDecoder
         public Form1()
         {
             InitializeComponent();
+
+            btnToJson.AllowDrop = true;
         }
         /// <summary>
         /// コントロールの初期化はこっちでやる
@@ -79,6 +81,10 @@ namespace IPSDecoder
         /// <param name="e"></param>
         private void Form1_DragEnter(object sender, DragEventArgs e)
         {
+        }
+        // *********************************************************************
+        private void btnToJson_DragEnter(object sender, DragEventArgs e)
+        {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 e.Effect = DragDropEffects.All;
@@ -87,7 +93,16 @@ namespace IPSDecoder
             {
                 e.Effect = DragDropEffects.None;
             }
+
         }
+        // *********************************************************************
+        private void btnToJson_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+            //ここでは単純にファイルをリストアップするだけ
+            IpsToJson(files);
+        }
+        // *********************************************************************
         /// <summary>
         /// ドラッグ＆ドロップの本体
         /// </summary>
@@ -95,28 +110,75 @@ namespace IPSDecoder
         /// <param name="e"></param>
         private void Form1_DragDrop(object sender, DragEventArgs e)
         {
-            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop, false);
-            //ここでは単純にファイルをリストアップするだけ
-            GetCommand(files);
         }
         //-------------------------------------------------------------
         /// <summary>
         /// ダミー関数
         /// </summary>
         /// <param name="cmd"></param>
-        public void GetCommand(string[] cmd)
+        public void IpsToJson(string[] cmd)
         {
             if (cmd.Length > 0)
             {
                 foreach (string s in cmd)
                 {
                     IPS ips = new IPS();
-                    if(ips.LoadFile(s))
+                    if(ips.InportIPSFile(s))
                     {
-                        textBox1.Text += ips.ToJson();
+                        if(cbToJsonClear.Checked == true)
+                        {
+                            textBox1.Text = "";
+                        }
+                        if (cbToJsonExport.Checked==true)
+                        {
+                            if (ips.ExportJson(Path.ChangeExtension(s, ".json")) == true)
+                            {
+                                textBox1.Text += "// **********************************\r\n";
+                                textBox1.Text += "// Export " + ips.FilePath + "\r\n";
+                            }
+
+                        }
+                        if (cbToJsonPeview.Checked == true)
+                        {
+                            textBox1.Text += ips.ToJson();
+                        }
                     }
                 }
             }
+        }
+        // ********************************************************************************
+        public bool IpsToJson(string s)
+        {
+            bool ret = false;
+            IPS ips = new IPS();
+            if (cbToJsonClear.Checked == true)
+            {
+                textBox1.Text = "";
+            }
+            if (ips.InportIPSFile(s))
+            {
+                if (cbToJsonExport.Checked == true)
+                {
+                    if (ips.ExportJson(Path.ChangeExtension(s, ".json")) == true)
+                    {
+                        textBox1.Text += "// **********************************\r\n";
+                        textBox1.Text += "// Export " + ips.FilePath + "\r\n";
+                        ret = true;
+                    }
+
+                }
+                if (cbToJsonPeview.Checked == true)
+                {
+                    textBox1.Text += ips.ToJson();
+                    ret = true;
+                }
+            }
+            if ((cbToJsonClear.Checked == true)&&(ret==false))
+            {
+                textBox1.Text += "ERRER!\r\n";
+                textBox1.Text += s + "\r\n";
+            }
+            return ret;
         }
         /// <summary>
         /// メニューの終了
@@ -133,53 +195,11 @@ namespace IPSDecoder
         {
             AppInfoDialog.ShowAppInfoDialog();
         }
-        private void button1_Click(object sender, EventArgs e)
+
+        private void btnToJsonClear_Click(object sender, EventArgs e)
         {
-
-            JsonPref j = new JsonPref();
-
-            int[] aaa = new int[] { 78, 9, 12 };
-            double[] bbb = new double[] { 0.7, 0.01, 0.12 };
-            string[] ccc = new string[] { "eee", "sfskjbF", "13" };
-            j.SetIntArray("aa", aaa);
-            j.SetDoubleArray("bb", bbb);
-            j.SetStringArray("cc", ccc);
-
-            MessageBox.Show(j.ToJson());
-
+            textBox1.Text = "";
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
-        {
-            dynamic js = new DynamicJson();
-            js.Name = "aaa.ips";
-            js.Adr = "0x00000";
-            js.PatchSize = "0x0001";
-            textBox1.Text = js.ToString();   
-        }
-
-
-        /*
-private void button1_Click(object sender, EventArgs e)
-{
-	dynamic a = new DynamicJson();
-	a.fff = new string[] { "a", "B" };
-	a.fff = "12";
-	//a.fff = new { aaa=12, ccc="www" };
-
-	MessageBox.Show(a.fff.GetType().ToString());
-
-	JsonPref s = new JsonPref();
-	s.AddInt("aaa", 99);
-	string ss = s.ToJson();
-	MessageBox.Show(ss);
-	s.Parse(ss);
-	string sss = s.ToJson();
-	MessageBox.Show(sss);
-
-	int i = s.GetInt("aaa");
-	MessageBox.Show(String.Format("{0}", i));
-}
-*/
     }
 }
